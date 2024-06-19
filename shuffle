@@ -1,0 +1,11 @@
+import pandas as pd
+
+df_avto = pd.read_csv('avto.csv')
+df_rzd = pd.read_csv('rzd.csv')
+df_avia = pd.read_csv('avia.csv')
+
+df = pd.concat([df_avto, df_rzd, df_avia], ignore_index=True)
+
+df_res = df.sample(frac=1).reset_index(drop=True)
+
+df_res.to_csv('tg_data.csv', index=False)
