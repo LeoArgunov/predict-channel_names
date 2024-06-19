@@ -1,0 +1,28 @@
+from bs4 import BeautifulSoup
+import pandas as pd
+
+data = []
+channel_name = '@aviaru_news'
+url = 'avia/messages'
+for i in range(1, 60):
+    if i == 1:
+        res_url = url + '.html'
+    else:
+        res_url = url + str(i) + '.html'
+        
+    with open(res_url, 'r', encoding='utf-8') as file:
+        html_content = file.read()
+
+
+    soup = BeautifulSoup(html_content, 'html.parser')
+
+
+    div_texts = soup.find_all('div', class_='text')
+    filtered_div_texts = [div for div in div_texts if 'bold' not in div.get('class', [])]
+
+    for div in filtered_div_texts:
+        data.append([div.get_text(strip=True), channel_name])
+
+
+df = pd.DataFrame(data, columns=['Message', 'channel_name'])
+df.to_csv('avia.csv', index=False, encoding='utf-8')
